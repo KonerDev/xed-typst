@@ -1,0 +1,10 @@
+{
+  "languages": [
+    {
+      "grammar": "typst.tmLanguage.json",
+      "name": "Typst",
+      "scopeName": "source.typst",
+      "languageConfiguration": "language-configuration.json"
+    }
+  ]
+}
