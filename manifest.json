@@ -1,0 +1,15 @@
+{
+  "$schema": "schema/schema.json",
+  "id": "com.koner.typst",
+  "name": "Typst Support",
+  "mainClass": "com.koner.typst.Main",
+  "version": "1.0.0",
+  "description": " Xed-Editor extension for the Typst language.",
+  "author": {
+    "displayName": "KonerDev",
+    "github": "KonerDev"
+  },
+  "minAppVersion": 87,
+  "targetAppVersion": 87,
+  "repository": "https://github.com/KonerDev/xed-typst"
+}
