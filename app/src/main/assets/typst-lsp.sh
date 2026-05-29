@@ -5,7 +5,7 @@ source "$LOCAL/bin/utils"
 info 'Preparing...'
 apt update && apt upgrade -y
 
-TINYMIST_VERSION="v0.14.18"
+TINYMIST_VERSION="$1"
 INSTALL_DIR="$HOME/.lsp/typst"
 
 get_arch() {

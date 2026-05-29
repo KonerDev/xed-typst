@@ -11,9 +11,6 @@ import com.rk.file.child
 import com.rk.file.sandboxHomeDir
 import com.rk.utils.toast
 import io.github.z4kn4fein.semver.toVersionOrNull
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import org.json.JSONObject
 import java.io.File
 
 enum class TypstInstallationAction {
@@ -27,8 +24,6 @@ data class TypstInstallationManager(
 
     var cachedPendingAction: TypstInstallationAction? = null
         private set
-
-    private val client = OkHttpClient()
 
     suspend fun performStartupActions() {
         val pendingAction = checkForAction()
@@ -103,22 +98,7 @@ data class TypstInstallationManager(
             .getOrNull()
     }
 
-    private fun fetchLatestVersion(): String? {
-        return runCatching {
-            val request = Request.Builder()
-                .url("https://api.github.com/repos/typst/typst/releases/latest")
-                .build()
-
-            client.newCall(request).execute().use { response ->
-                if (!response.isSuccessful) return null
-
-                val body = response.body.string()
-
-                val json = JSONObject(body)
-                return json.getString("tag_name").removePrefix("v")
-            }
-        }.getOrNull()
-    }
+    private fun fetchLatestVersion() = GithubReleasesApi("typst", "typst").fetchLatestVersion()
 
     private fun manageInstallation(action: TypstInstallationAction) {
         val flag = when (action) {

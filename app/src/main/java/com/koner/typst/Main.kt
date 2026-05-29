@@ -8,14 +8,11 @@ import com.koner.typst.commands.TypstUpdateCommand
 import com.koner.typst.runner.TypstCompileRunner
 import com.koner.typst.runner.TypstWatchRunner
 import com.koner.typst.utils.TypstInstallationManager
-import com.rk.DefaultScope
 import com.rk.commands.CommandProvider
 import com.rk.extension.ExtensionAPI
 import com.rk.extension.ExtensionContext
 import com.rk.file.FileTypeManager
 import com.rk.file.child
-import com.rk.file.createDirIfNot
-import com.rk.file.localBinDir
 import com.rk.lsp.LspRegistry
 import com.rk.runner.RunnerManager
 import com.rk.utils.getTempDir
