@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 1.1.0 (v89)
 ### Added
+- Automatic setup of the `Typst` command-line tool on startup
+- Automatic detection and updating of the latest available `Typst` and `Tinymist` versions
+- Document compilation runner
+- Document watch runner
+- Manual commands for maintaining the `Typst` environment (update and install/uninstall)
+- Added project changelog to track changes
+
+### Changed
+- The extension now automatically manages tool versions instead of relying on hardcoded versions
+- Updated `README.md` with screenshots and extended feature list
 
 ## 1.0.1 (v88) - 2026-05-27
 ### Changed
@@ -14,5 +24,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 1.0.0 (v87) - 2026-05-26
 ### Added
-- Syntax highlighting for Typst files
-- Language Server Protocol (LSP) support via [Tymnist](https://github.com/Myriad-Dreamin/tinymist)
+- Syntax highlighting for `Typst` files
+- Language Server Protocol (LSP) support via [`Tinymist`](https://github.com/Myriad-Dreamin/tinymist)
