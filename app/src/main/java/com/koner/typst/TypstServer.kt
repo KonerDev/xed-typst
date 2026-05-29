@@ -7,13 +7,19 @@ import com.rk.file.sandboxHomeDir
 import com.rk.icons.Icon
 import com.rk.lsp.LspConnectionConfig
 import com.rk.lsp.ScriptedLspServer
+import io.github.z4kn4fein.semver.toVersion
+import io.github.z4kn4fein.semver.toVersionOrNull
 import java.io.File
 
-class TypstServer(override val icon: Icon, override val installScript: File) : ScriptedLspServer() {
+class TypstServer(
+    override val icon: Icon,
+    override val supportedExtensions: List<String>,
+    override val installScript: File,
+) : ScriptedLspServer() {
+
     override val id = "typst"
     override val languageName = "Typst"
     override val serverName = "tinymist"
-    override val supportedExtensions = listOf("typ")
 
     override val installId = "Tinymist language server"
 
@@ -32,8 +38,9 @@ class TypstServer(override val icon: Icon, override val installScript: File) : S
 
     override suspend fun isUpdatable(context: Context): Boolean {
         val versionFile = sandboxHomeDir().child(".lsp/typst/version.txt")
-        val currentVersion = runCatching { versionFile.readText().trim() }.getOrNull()
-        return currentVersion != LATEST_VERSION
+        val current = runCatching { versionFile.readText().trim() }.getOrNull()
+        val currentVersion = current?.toVersionOrNull(false) ?: return false
+        return currentVersion < LATEST_VERSION.toVersion(false)
     }
 
     override fun getConnectionConfig(): LspConnectionConfig {

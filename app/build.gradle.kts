@@ -86,6 +86,7 @@ dependencies {
     compileOnly(libs.pine.core)
     compileOnly(libs.androidx.lifecycle.process)
     compileOnly(libs.androidsvg.aar)
+    compileOnly(libs.semver)
 }
 
 //  ---------------- below is the code for automatically updating the sdk.jar --------------------
