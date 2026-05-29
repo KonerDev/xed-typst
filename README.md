@@ -11,9 +11,11 @@ This extension adds support for the [Typst](https://typst.app/) language in Xed-
 
 ## Screenshots
 
-<img src="https://github.com/KonerDev/xed-typst/blob/main/assets/lsp.png" alt="Tinymist language server" width="33%">
-<img src="https://github.com/KonerDev/xed-typst/blob/main/assets/commands.png" alt="Typst runner" width="33%">
-<img src="https://github.com/KonerDev/xed-typst/blob/main/assets/runner.png" alt="Typst management commands" width="33%">
+<div align="center">
+  <img src="https://github.com/KonerDev/xed-typst/blob/main/assets/lsp.png" alt="Tinymist language server" width="33%">
+  <img src="https://github.com/KonerDev/xed-typst/blob/main/assets/commands.png" alt="Typst runner" width="33%">
+  <img src="https://github.com/KonerDev/xed-typst/blob/main/assets/runner.png" alt="Typst management commands" width="33%">
+</div>
 
 ## Installation
 
