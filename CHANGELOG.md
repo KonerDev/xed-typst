@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 1.1.1 (v91) - 2026-06-02
+### Changed
+- Removed the requirement for the maximum version.
+
 ## 1.1.0 (v90) - 2026-05-29
 ### Added
 - Automatic setup of the `Typst` command-line tool on startup
@@ -20,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 1.0.1 (v88) - 2026-05-27
 ### Changed
-- Update the version terminology in accordance with the schema update in Xed-Editor.
+- Updated the version terminology in accordance with the schema update in Xed-Editor.
 
 ## 1.0.0 (v87) - 2026-05-26
 ### Added

@@ -12,6 +12,6 @@
   "license": "MIT",
   "tags": ["typst", "lsp", "highlighting"],
   "minAppVersion": 90,
-  "maxAppVersion": 90,
+  "maxAppVersion": null,
   "repository": "https://github.com/KonerDev/xed-typst"
 }
