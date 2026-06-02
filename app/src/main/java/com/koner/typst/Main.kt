@@ -119,7 +119,7 @@ class Main(context: ExtensionContext) : ExtensionAPI(context) {
         return typstCliScript
     }
 
-    override fun onUninstalled() {
+    private fun dispose() {
         val fileProviderRegistry = FileProviderRegistry.getInstance()
         fileResolver?.let {
             fileProviderRegistry.removeFileProvider(it)
@@ -142,6 +142,14 @@ class Main(context: ExtensionContext) : ExtensionAPI(context) {
         typstUpdateCommand?.let {
             CommandProvider.unregisterCommand(it)
         }
+    }
+
+    override fun onUpdated() {
+        dispose()
+    }
+
+    override fun onUninstalled() {
+        dispose()
         typstInstallationManager?.onUninstalled()
     }
 
