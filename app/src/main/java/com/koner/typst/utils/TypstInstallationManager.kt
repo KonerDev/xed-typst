@@ -9,6 +9,7 @@ import com.rk.exec.launchTerminal
 import com.rk.extension.ExtensionContext
 import com.rk.file.child
 import com.rk.file.sandboxHomeDir
+import com.rk.utils.dialog
 import com.rk.utils.toast
 import io.github.z4kn4fein.semver.toVersionOrNull
 import java.io.File
@@ -144,38 +145,32 @@ data class TypstInstallationManager(
         val installLabel = context.appResources.getString("install") ?: "Install"
         val activity = MainActivity.instance ?: return
 
-        activity.runOnUiThread {
-            MaterialAlertDialogBuilder(activity)
-                .setTitle(context.resources.getString(R.string.install_dialog))
-                .setMessage(context.resources.getString(R.string.install_dialog_desc))
-                .setCancelable(false)
-                .setPositiveButton(installLabel) { _, _ ->
-                    onConfirm()
-                }
-                .setNegativeButton(context.resources.getString(R.string.later)) { dialog, _ ->
-                    dialog.dismiss()
-                }
-                .show()
-        }
+        dialog(
+            activity = activity,
+            title = context.resources.getString(R.string.install_dialog),
+            msg = context.resources.getString(R.string.install_dialog_desc),
+            cancelable = false,
+            okText = installLabel,
+            cancelText = context.resources.getString(R.string.later),
+            onOk = { onConfirm() },
+            onCancel = {}
+        )
     }
 
     private fun showUpdateDialog(onConfirm: () -> Unit) {
         val updateLabel = context.appResources.getString("update") ?: "Update"
         val activity = MainActivity.instance ?: return
 
-        activity.runOnUiThread {
-            MaterialAlertDialogBuilder(activity)
-                .setTitle(context.resources.getString(R.string.update_dialog))
-                .setMessage(context.resources.getString(R.string.update_dialog_desc))
-                .setCancelable(false)
-                .setPositiveButton(updateLabel) { _, _ ->
-                    onConfirm()
-                }
-                .setNegativeButton(context.resources.getString(R.string.later)) { dialog, _ ->
-                    dialog.dismiss()
-                }
-                .show()
-        }
+        dialog(
+            activity = activity,
+            title = context.resources.getString(R.string.update_dialog),
+            msg = context.resources.getString(R.string.update_dialog_desc),
+            cancelable = false,
+            okText = updateLabel,
+            cancelText = context.resources.getString(R.string.later),
+            onOk = { onConfirm() },
+            onCancel = {}
+        )
     }
 
     private fun showUninstallConfirmDialog(onConfirm: () -> Unit) {
@@ -183,37 +178,31 @@ data class TypstInstallationManager(
         val cancelLabel = context.appResources.getString("cancel") ?: "Cancel"
         val activity = MainActivity.instance ?: return
 
-        activity.runOnUiThread {
-            MaterialAlertDialogBuilder(activity)
-                .setTitle(context.resources.getString(R.string.uninstall_dialog))
-                .setMessage(context.resources.getString(R.string.uninstall_confirm_dialog_desc))
-                .setCancelable(false)
-                .setPositiveButton(uninstallLabel) { _, _ ->
-                    onConfirm()
-                }
-                .setNegativeButton(cancelLabel) { dialog, _ ->
-                    dialog.dismiss()
-                }
-                .show()
-        }
+        dialog(
+            activity = activity,
+            title = context.resources.getString(R.string.uninstall_dialog),
+            msg = context.resources.getString(R.string.uninstall_confirm_dialog_desc),
+            cancelable = false,
+            okText = uninstallLabel,
+            cancelText = cancelLabel,
+            onOk = { onConfirm() },
+            onCancel = {}
+        )
     }
 
     private fun showUninstallQuestionDialog(onConfirm: () -> Unit) {
         val uninstallLabel = context.appResources.getString("uninstall") ?: "Uninstall"
         val activity = context.currentActivity ?: return
 
-        activity.runOnUiThread {
-            MaterialAlertDialogBuilder(activity)
-                .setTitle(context.resources.getString(R.string.uninstall_dialog))
-                .setMessage(context.resources.getString(R.string.uninstall_question_dialog_desc))
-                .setCancelable(false)
-                .setPositiveButton(uninstallLabel) { _, _ ->
-                    onConfirm()
-                }
-                .setNegativeButton(context.resources.getString(R.string.keep)) { dialog, _ ->
-                    dialog.dismiss()
-                }
-                .show()
-        }
+        dialog(
+            activity = activity,
+            title = context.resources.getString(R.string.uninstall_dialog),
+            msg = context.resources.getString(R.string.uninstall_question_dialog_desc),
+            cancelable = false,
+            okText = uninstallLabel,
+            cancelText = context.resources.getString(R.string.keep),
+            onOk = { onConfirm() },
+            onCancel = {}
+        )
     }
 }

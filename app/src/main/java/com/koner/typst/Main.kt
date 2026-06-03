@@ -149,6 +149,9 @@ class Main(context: ExtensionContext) : ExtensionAPI(context) {
     }
 
     override fun onUninstalled() {
+        context.currentActivity?.let {
+            typstServer?.uninstall(it)
+        }
         dispose()
         typstInstallationManager?.onUninstalled()
     }

@@ -16,7 +16,7 @@
 
     <string name="uninstall_dialog">Uninstall Typst?</string>
     <string name="uninstall_confirm_dialog_desc">Are you sure you want to uninstall Typst CLI?</string>
-    <string name="uninstall_question_dialog_desc">Would you also like to uninstall Typst CLI?</string>
+    <string name="uninstall_question_dialog_desc">Would you also like to uninstall Typst CLI? You can also keep it installed without the extension.</string>
 
     <string name="later">Later</string>
     <string name="keep">Keep</string>

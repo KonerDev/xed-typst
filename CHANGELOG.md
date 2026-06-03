@@ -5,7 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 1.1.1 (v91) - 2026-06-02
+## 1.1.2 (v90) - 2026-06-03
+## Added
+- Uninstall Typst language server automatically on extension uninstallation
+
+## Changed
+- Improved uninstallation question message
+
+## Fixed
+- Fixed Typst CLI dialogs not following theme
+
+## 1.1.1 (v90) - 2026-06-02
 ## Added
 - Implemented `onUpdated()` to ensure resources are cleaned up during extension updates
 
