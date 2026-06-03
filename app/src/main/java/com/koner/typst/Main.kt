@@ -21,6 +21,7 @@ import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry
 import io.github.rosemoe.sora.langs.textmate.registry.provider.AssetsFileResolver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.io.File
 import kotlin.io.writeText
 
@@ -150,7 +151,10 @@ class Main(context: ExtensionContext) : ExtensionAPI(context) {
 
     override fun onUninstalled() {
         context.currentActivity?.let {
-            typstServer?.uninstall(it)
+            val isInstalled = runBlocking { typstServer?.isInstalled(it) } ?: false
+            if (isInstalled) {
+                typstServer?.uninstall(it)
+            }
         }
         dispose()
         typstInstallationManager?.onUninstalled()
