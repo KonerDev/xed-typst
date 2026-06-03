@@ -1,6 +1,5 @@
 package com.koner.typst.utils
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.koner.typst.R
 import com.rk.activities.main.MainActivity
 import com.rk.exec.ShellUtils
@@ -29,10 +28,10 @@ data class TypstInstallationManager(
     suspend fun performStartupActions() {
         val pendingAction = checkForAction()
 
-        if (pendingAction == TypstInstallationAction.INSTALL) {
-            showInstallDialog { manageInstallation(pendingAction) }
-            return
-        }
+//        if (pendingAction == TypstInstallationAction.INSTALL) {
+//            showInstallDialog { manageInstallation(pendingAction) }
+//            return
+//        }
 
         if (pendingAction == TypstInstallationAction.UPDATE) {
             showUpdateDialog { manageInstallation(pendingAction) }
