@@ -1,5 +1,6 @@
 package com.koner.typst.runner
 
+import android.app.Activity
 import android.content.Context
 import android.content.res.Resources
 import com.koner.typst.R
@@ -25,7 +26,7 @@ class TypstWatchRunner(
         return supportedExtensions.contains(fileObject.getExtension())
     }
 
-    override suspend fun run(context: Context, fileObject: FileObject) {
+    override suspend fun run(activity: Activity, fileObject: FileObject) {
         val workingDir = fileObject.getParentFile()?.getAbsolutePath()
         typstInstallationManager.launchTypstCommand(label, workingDir, "watch", fileObject.getName())
     }

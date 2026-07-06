@@ -145,6 +145,8 @@ class Main(context: ExtensionContext) : ExtensionAPI(context) {
         }
     }
 
+    override fun onInstalled() {}
+
     override fun onUpdated() {
         dispose()
     }

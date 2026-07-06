@@ -110,7 +110,7 @@ data class TypstInstallationManager(
         val activity = MainActivity.instance ?: return
 
         launchTerminal(
-            context = activity,
+            activity = activity,
             terminalCommand = TerminalCommand(
                 exe = "/bin/bash",
                 args = arrayOf(script.absolutePath, flag),
@@ -130,7 +130,7 @@ data class TypstInstallationManager(
         val activity = MainActivity.instance ?: return
 
         launchTerminal(
-            context = activity,
+            activity = activity,
             terminalCommand = TerminalCommand(
                 exe = "/home/.local/bin/typst",
                 args = arrayOf(*command),

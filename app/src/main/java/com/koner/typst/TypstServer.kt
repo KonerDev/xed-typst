@@ -1,5 +1,6 @@
 package com.koner.typst
 
+import android.app.Activity
 import android.content.Context
 import com.koner.typst.utils.GithubReleasesApi
 import com.rk.exec.isTerminalInstalled
@@ -35,13 +36,13 @@ class TypstServer(
         return sandboxHomeDir().child(".lsp/typst/tinymist").exists()
     }
 
-    override fun install(context: Context) = launchInstaller(context, latestVersion)
+    override fun install(activity: Activity) = launchInstaller(activity, latestVersion)
 
-    override fun uninstall(context: Context) = launchInstaller(context, "--uninstall", latestVersion)
+    override fun uninstall(activity: Activity) = launchInstaller(activity, "--uninstall", latestVersion)
 
-    override fun update(context: Context) = launchInstaller(context, "--update", latestVersion)
+    override fun update(activity: Activity) = launchInstaller(activity, "--update", latestVersion)
 
-    override suspend fun isUpdatable(context: Context): Boolean {
+    override suspend fun hasUpdate(context: Context): Boolean {
         val versionFile = sandboxHomeDir().child(".lsp/typst/version.txt")
         val currentVersionText = runCatching { versionFile.readText().trim() }.getOrNull()
         val currentVersion = currentVersionText?.toVersionOrNull(false) ?: return false
