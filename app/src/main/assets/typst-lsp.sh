@@ -2,10 +2,7 @@ set -e
 
 source "$LOCAL/bin/utils"
 
-info 'Preparing...'
-apt update && apt upgrade -y
-
-TINYMIST_VERSION="$1"
+TINYMIST_VERSION="$2"
 INSTALL_DIR="$HOME/.lsp/typst"
 
 get_arch() {
@@ -73,6 +70,10 @@ update() {
   info "Extracting..."
   tar -xzf tinymist.tar.gz
   rm tinymist.tar.gz
+
+  EXTRACT_DIR=$(find . -maxdepth 1 -type d -name "tinymist-*" | head -n 1)
+  mv "$EXTRACT_DIR/tinymist" ./tinymist
+  rm -rf "$EXTRACT_DIR"
 
   chmod +x tinymist
 

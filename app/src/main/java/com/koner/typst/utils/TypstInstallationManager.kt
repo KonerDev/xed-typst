@@ -65,13 +65,15 @@ data class TypstInstallationManager(
     }
 
     suspend fun checkForAction(): TypstInstallationAction? {
-        return when {
-            !isCliInstalled() -> TypstInstallationAction.INSTALL
-            isUpdateAvailable() -> TypstInstallationAction.UPDATE
-            else -> null
-        }.also {
-            cachedPendingAction = it
-        }
+        val action =
+            when {
+                !isCliInstalled() -> TypstInstallationAction.INSTALL
+                isUpdateAvailable() -> TypstInstallationAction.UPDATE
+                else -> null
+            }
+
+        cachedPendingAction = action
+        return action
     }
 
     fun isCliInstalled(): Boolean {
@@ -112,11 +114,11 @@ data class TypstInstallationManager(
     private fun fetchLatestVersion() = GithubReleasesApi("typst", "typst").fetchLatestVersion()
 
     private fun manageInstallation(action: TypstInstallationAction) {
-        val flag =
+        val flags =
             when (action) {
-                TypstInstallationAction.INSTALL -> "--install"
-                TypstInstallationAction.UPDATE -> "--update"
-                TypstInstallationAction.UNINSTALL -> "--uninstall"
+                TypstInstallationAction.INSTALL -> arrayOf("--install", "v${fetchLatestVersion()}")
+                TypstInstallationAction.UPDATE -> arrayOf("--update")
+                TypstInstallationAction.UNINSTALL -> arrayOf("--uninstall")
             }
 
         val activity = MainActivity.instance ?: return
@@ -126,7 +128,11 @@ data class TypstInstallationManager(
             terminalCommand =
                 TerminalCommand(
                     exe = "/bin/bash",
-                    args = arrayOf(script.absolutePath, flag),
+                    args =
+                        arrayOf(
+                            script.absolutePath,
+                            *flags,
+                        ),
                     id = "Typst installation",
                     env = arrayOf("DEBIAN_FRONTEND=noninteractive"),
                 ),

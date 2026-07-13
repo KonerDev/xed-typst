@@ -11,12 +11,13 @@ import com.rk.exec.ubuntuProcess
 import com.rk.extension.ExtensionContext
 import com.rk.file.FileObject
 import com.rk.icons.Icon
+import com.rk.resources.fillPlaceholders
 import com.rk.runner.Runner
 import com.rk.utils.toast
+import java.net.ServerSocket
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.net.ServerSocket
 
 class TypstPreviewRunner(
     private val icon: Icon,
@@ -105,7 +106,7 @@ class TypstPreviewRunner(
 
                     context.logError("Preview error: $error")
                     activity.runOnUiThread {
-                        toast("Preview error: $error")
+                        toast(context.resources.getString(R.string.preview_error).fillPlaceholders(error))
                     }
                 }
             } finally {

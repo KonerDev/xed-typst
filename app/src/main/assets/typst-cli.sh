@@ -2,10 +2,7 @@ set -e
 
 source "$LOCAL/bin/utils"
 
-info 'Preparing...'
-apt update && apt upgrade -y
-
-TYPST_VERSION="v0.14.2"
+TYPST_VERSION="$2"
 INSTALL_DIR="$HOME/.local/bin"
 
 get_arch() {

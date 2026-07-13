@@ -23,4 +23,7 @@
 
     <string name="later">Later</string>
     <string name="keep">Keep</string>
+
+    <string name="preview_error">Preview error: %s</string>
+    <string name="compile_error">Compile error: %s</string>
 </resources>

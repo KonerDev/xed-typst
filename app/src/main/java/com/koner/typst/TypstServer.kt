@@ -15,7 +15,7 @@ import java.io.File
 class TypstServer(
     override val icon: Icon,
     override val supportedExtensions: List<String>,
-    override val installScript: File
+    override val installScript: File,
 ) : ScriptedLspServer() {
 
     override val id = "typst"
@@ -25,7 +25,9 @@ class TypstServer(
     override val installId = "Tinymist language server"
 
     val latestVersion by lazy {
-        GithubReleasesApi("Myriad-Dreamin", "tinymist").fetchLatestVersion() ?: "v0.14.18"
+        GithubReleasesApi("Myriad-Dreamin", "tinymist").fetchLatestVersion()?.let {
+            "v$it"
+        } ?: "v0.15.2"
     }
 
     override suspend fun isInstalled(context: Context): Boolean {
@@ -36,7 +38,7 @@ class TypstServer(
         return sandboxHomeDir().child(".lsp/typst/tinymist").exists()
     }
 
-    override fun install(activity: Activity) = launchInstaller(activity, latestVersion)
+    override fun install(activity: Activity) = launchInstaller(activity, "--install", latestVersion)
 
     override fun uninstall(activity: Activity) = launchInstaller(activity, "--uninstall", latestVersion)
 
