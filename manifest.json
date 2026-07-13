@@ -3,14 +3,18 @@
   "id": "com.koner.typst",
   "name": "Typst Support",
   "mainClass": "com.koner.typst.Main",
-  "version": "1.1.3",
+  "version": "1.2.3",
   "description": " Xed-Editor extension for the Typst language.",
   "author": {
     "displayName": "KonerDev",
     "github": "KonerDev"
   },
   "license": "MIT",
-  "tags": ["typst", "lsp", "highlighting"],
+  "tags": [
+    "typst",
+    "lsp",
+    "highlighting"
+  ],
   "minAppVersion": 95,
   "maxAppVersion": null,
   "repository": "https://github.com/KonerDev/xed-typst"

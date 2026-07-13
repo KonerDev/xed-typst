@@ -1,12 +1,13 @@
 package com.koner.typst
 
-import android.app.Activity
-import android.os.Bundle
 import androidx.annotation.Keep
-import com.koner.typst.commands.TypstUninstallCommand
-import com.koner.typst.commands.TypstUpdateCommand
-import com.koner.typst.runner.TypstCompileRunner
-import com.koner.typst.runner.TypstWatchRunner
+import com.koner.typst.commands.cli.TypstUninstallCommand
+import com.koner.typst.commands.cli.TypstUpdateCommand
+import com.koner.typst.commands.compile.TypstCompileHtmlCommand
+import com.koner.typst.commands.compile.TypstCompilePdfCommand
+import com.koner.typst.commands.compile.TypstCompilePngCommand
+import com.koner.typst.commands.compile.TypstCompileSvgCommand
+import com.koner.typst.runner.TypstPreviewRunner
 import com.koner.typst.utils.TypstInstallationManager
 import com.rk.commands.CommandProvider
 import com.rk.extension.ExtensionAPI
@@ -23,7 +24,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.io.File
-import kotlin.io.writeText
 
 @Keep
 @Suppress("unused")
@@ -31,13 +31,19 @@ class Main(context: ExtensionContext) : ExtensionAPI(context) {
     private var fileResolver: AssetsFileResolver? = null
     private var typstLanguage: TypstLanguage? = null
     private var typstServer: TypstServer? = null
-    private var typstCompileRunner: TypstCompileRunner? = null
-    private var typstWatchRunner: TypstWatchRunner? = null
+
+    private var typstPreviewRunner: TypstPreviewRunner? = null
+
+    private var typstCompilePdfCommand: TypstCompilePdfCommand? = null
+    private var typstCompileHtmlCommand: TypstCompileHtmlCommand? = null
+    private var typstCompilePngCommand: TypstCompilePngCommand? = null
+    private var typstCompileSvgCommand: TypstCompileSvgCommand? = null
+
     private var typstInstallationManager: TypstInstallationManager? = null
     private var typstUninstallCommand: TypstUninstallCommand? = null
     private var typstUpdateCommand: TypstUpdateCommand? = null
 
-    override fun onExtensionLoaded() {
+    override fun onLoad() {
         val fileProviderRegistry = FileProviderRegistry.getInstance()
         fileResolver = AssetsFileResolver(context.assets)
         fileProviderRegistry.addFileProvider(fileResolver)
@@ -45,82 +51,130 @@ class Main(context: ExtensionContext) : ExtensionAPI(context) {
         val grammarRegistry = GrammarRegistry.getInstance()
         grammarRegistry.loadGrammars("language.json")
 
-        val fileType = TypstLanguage(context.resources).also {
-            typstLanguage = it
-            FileTypeManager.register(it)
-        }
+        val fileType =
+            TypstLanguage(context.resources).also {
+                typstLanguage = it
+                FileTypeManager.register(it)
+            }
 
-        typstServer = TypstServer(
-            icon = fileType.icon,
-            supportedExtensions = fileType.extensions,
-            installScript = acquireLspInstallScript()
-        ).also {
-            LspRegistry.registerServer(it)
-        }
+        typstServer =
+            TypstServer(
+                    icon = fileType.icon,
+                    supportedExtensions = fileType.extensions,
+                    installScript = acquireLspInstallScript(),
+                )
+                .also {
+                    LspRegistry.registerServer(it)
+                }
 
         val typstCliScript = acquireCliInstallScript()
-        val manager = TypstInstallationManager(typstCliScript, context).also {
-            typstInstallationManager = it
-        }
+        val manager =
+            TypstInstallationManager(typstCliScript, context).also {
+                typstInstallationManager = it
+            }
 
         context.scope.launch(Dispatchers.IO) {
             manager.performStartupActions()
         }
 
-        typstCompileRunner = TypstCompileRunner(
-            icon = fileType.icon,
-            supportedExtensions = fileType.extensions,
-            typstInstallationManager = manager,
-            resources = context.resources,
-        ).also {
-            RunnerManager.registerRunner(it)
-        }
+        typstPreviewRunner =
+            TypstPreviewRunner(
+                    icon = fileType.icon,
+                    context = context,
+                    supportedExtensions = fileType.extensions,
+                    typstInstallationManager = manager,
+                    resources = context.resources,
+                )
+                .also {
+                    RunnerManager.registerRunner(it)
+                }
 
-        typstWatchRunner = TypstWatchRunner(
-            icon = fileType.icon,
-            supportedExtensions = fileType.extensions,
-            typstInstallationManager = manager,
-            resources = context.resources,
-        ).also {
-            RunnerManager.registerRunner(it)
-        }
+        typstCompilePdfCommand =
+            TypstCompilePdfCommand(
+                    icon = fileType.icon,
+                    context = context,
+                    supportedExtensions = fileType.extensions,
+                    typstInstallationManager = manager,
+                )
+                .also {
+                    CommandProvider.registerCommand(it)
+                }
 
-        typstUninstallCommand = TypstUninstallCommand(
-            icon = fileType.icon,
-            resources = context.resources,
-            typstInstallationManager = manager,
-        ).also {
-            CommandProvider.registerCommand(it)
-        }
+        typstCompileHtmlCommand =
+            TypstCompileHtmlCommand(
+                    icon = fileType.icon,
+                    context = context,
+                    supportedExtensions = fileType.extensions,
+                    typstInstallationManager = manager,
+                )
+                .also {
+                    CommandProvider.registerCommand(it)
+                }
 
-        typstUpdateCommand = TypstUpdateCommand(
-            icon = fileType.icon,
-            resources = context.resources,
-            typstInstallationManager = manager,
-        ).also {
-            CommandProvider.registerCommand(it)
-        }
+        typstCompilePngCommand =
+            TypstCompilePngCommand(
+                    icon = fileType.icon,
+                    context = context,
+                    supportedExtensions = fileType.extensions,
+                    typstInstallationManager = manager,
+                )
+                .also {
+                    CommandProvider.registerCommand(it)
+                }
+
+        typstCompileSvgCommand =
+            TypstCompileSvgCommand(
+                    icon = fileType.icon,
+                    context = context,
+                    supportedExtensions = fileType.extensions,
+                    typstInstallationManager = manager,
+                )
+                .also {
+                    CommandProvider.registerCommand(it)
+                }
+
+        typstUninstallCommand =
+            TypstUninstallCommand(
+                    icon = fileType.icon,
+                    resources = context.resources,
+                    typstInstallationManager = manager,
+                )
+                .also {
+                    CommandProvider.registerCommand(it)
+                }
+
+        typstUpdateCommand =
+            TypstUpdateCommand(
+                    icon = fileType.icon,
+                    resources = context.resources,
+                    typstInstallationManager = manager,
+                )
+                .also {
+                    CommandProvider.registerCommand(it)
+                }
     }
 
     private fun acquireLspInstallScript(): File {
         val typstAssetStream = context.assets.open("typst-lsp.sh")
         val typstAsset = typstAssetStream.bufferedReader().use { it.readText() }
-        val typstLspScript = getTempDir().child("typst-lsp.sh").also {
-            it.writeText(typstAsset)
-        }
+        val typstLspScript =
+            getTempDir().child("typst-lsp.sh").also {
+                it.writeText(typstAsset)
+            }
         return typstLspScript
     }
 
     private fun acquireCliInstallScript(): File {
         val typstAssetStream = context.assets.open("typst-cli.sh")
         val typstAsset = typstAssetStream.bufferedReader().use { it.readText() }
-        val typstCliScript = getTempDir().child("typst-cli.sh").also {
-            it.writeText(typstAsset)
-        }
+        val typstCliScript =
+            getTempDir().child("typst-cli.sh").also {
+                it.writeText(typstAsset)
+            }
         return typstCliScript
     }
 
-    private fun dispose() {
+    override fun onDispose() {
         val fileProviderRegistry = FileProviderRegistry.getInstance()
         fileResolver?.let {
             fileProviderRegistry.removeFileProvider(it)
@@ -131,24 +185,30 @@ class Main(context: ExtensionContext) : ExtensionAPI(context) {
         typstServer?.let {
             LspRegistry.unregisterServer(it)
         }
-        typstCompileRunner?.let {
+
+        typstPreviewRunner?.let {
             RunnerManager.unregisterRunner(it)
         }
-        typstWatchRunner?.let {
-            RunnerManager.unregisterRunner(it)
+
+        typstCompilePdfCommand?.let {
+            CommandProvider.unregisterCommand(it)
         }
+        typstCompileHtmlCommand?.let {
+            CommandProvider.unregisterCommand(it)
+        }
+        typstCompilePngCommand?.let {
+            CommandProvider.unregisterCommand(it)
+        }
+        typstCompileSvgCommand?.let {
+            CommandProvider.unregisterCommand(it)
+        }
+
         typstUninstallCommand?.let {
             CommandProvider.unregisterCommand(it)
         }
         typstUpdateCommand?.let {
             CommandProvider.unregisterCommand(it)
         }
-    }
-
-    override fun onInstalled() {}
-
-    override fun onUpdated() {
-        dispose()
     }
 
     override fun onUninstalled() {
@@ -158,21 +218,6 @@ class Main(context: ExtensionContext) : ExtensionAPI(context) {
                 typstServer?.uninstall(it)
             }
         }
-        dispose()
         typstInstallationManager?.onUninstalled()
     }
-
-    override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
-
-    override fun onActivityDestroyed(activity: Activity) {}
-
-    override fun onActivityPaused(activity: Activity) {}
-
-    override fun onActivityResumed(activity: Activity) {}
-
-    override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
-
-    override fun onActivityStarted(activity: Activity) {}
-
-    override fun onActivityStopped(activity: Activity) {}
 }

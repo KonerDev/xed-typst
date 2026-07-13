@@ -7,7 +7,24 @@ This extension adds support for the [Typst](https://typst.app/) language in Xed-
 - Management of your Typst CLI installation
 - Syntax highlighting for Typst files
 - Language Server Protocol (LSP) support via [Tinymist](https://github.com/Myriad-Dreamin/tinymist)
-- Runner for compiling and watching documents
+- Multi-format compilation commands for PDF, HTML, PNG, and SVG output
+- Live document preview
+- Direct access to the Typst CLI binary through the system `PATH`
+
+## Typst CLI API
+
+The extension manages the Typst CLI installation and exposes the `typst` binary globally through
+your shell `PATH`.
+
+After installation, Typst can be used directly from the built-in terminal:
+
+```bash
+typst --version
+typst help
+typst compile document.typ
+typst compile --format html --features html document.typ compiled.html
+typst watch document.typ
+```
 
 ## Screenshots
 
@@ -20,4 +37,5 @@ This extension adds support for the [Typst](https://typst.app/) language in Xed-
 ## Installation
 
 Install the extension through the Xed-Editor's extension marketplace, and you're ready to go!
-Alternatively, you can download the latest release ZIP file and install it via **`Settings > Extensions > Install from storage`**.
+Alternatively, you can download the latest release ZIP file and install it via
+**`Settings > Extensions > Install from storage`**.

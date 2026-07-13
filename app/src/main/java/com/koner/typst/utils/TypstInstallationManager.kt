@@ -14,24 +14,25 @@ import io.github.z4kn4fein.semver.toVersionOrNull
 import java.io.File
 
 enum class TypstInstallationAction {
-    INSTALL, UPDATE, UNINSTALL
+    INSTALL,
+    UPDATE,
+    UNINSTALL,
 }
 
 data class TypstInstallationManager(
     private val script: File,
-    private val context: ExtensionContext
+    private val context: ExtensionContext,
 ) {
+
+    companion object {
+        const val TYPST_PATH = "/home/.local/bin/typst"
+    }
 
     var cachedPendingAction: TypstInstallationAction? = null
         private set
 
     suspend fun performStartupActions() {
         val pendingAction = checkForAction()
-
-//        if (pendingAction == TypstInstallationAction.INSTALL) {
-//            showInstallDialog { manageInstallation(pendingAction) }
-//            return
-//        }
 
         if (pendingAction == TypstInstallationAction.UPDATE) {
             showUpdateDialog { manageInstallation(pendingAction) }
@@ -40,15 +41,18 @@ data class TypstInstallationManager(
 
     fun performAction(action: TypstInstallationAction) {
         when (action) {
-            TypstInstallationAction.INSTALL -> showInstallDialog {
-                manageInstallation(action)
-            }
-            TypstInstallationAction.UPDATE -> showUpdateDialog {
-                manageInstallation(action)
-            }
-            TypstInstallationAction.UNINSTALL -> showUninstallConfirmDialog {
-                manageInstallation(action)
-            }
+            TypstInstallationAction.INSTALL ->
+                showInstallDialog {
+                    manageInstallation(action)
+                }
+            TypstInstallationAction.UPDATE ->
+                showUpdateDialog {
+                    manageInstallation(action)
+                }
+            TypstInstallationAction.UNINSTALL ->
+                showUninstallConfirmDialog {
+                    manageInstallation(action)
+                }
         }
     }
 
@@ -71,7 +75,16 @@ data class TypstInstallationManager(
     }
 
     fun isCliInstalled(): Boolean {
-        return sandboxHomeDir().child(".local/bin/typst").exists()
+        return sandboxHomeDir().child(TYPST_PATH.removePrefix("/home/")).exists()
+    }
+
+    fun ensureCliInstalled(): Boolean {
+        if (!isCliInstalled()) {
+            toast(context.resources.getString(R.string.cli_not_installed))
+            performAction(TypstInstallationAction.INSTALL)
+            return false
+        }
+        return true
     }
 
     private suspend fun isUpdateAvailable(): Boolean {
@@ -85,15 +98,13 @@ data class TypstInstallationManager(
     private suspend fun getInstalledVersion(): String? {
         val result =
             ShellUtils.runUbuntu(
-                command = arrayOf("/home/.local/bin/typst", "--version"),
+                command = arrayOf(TYPST_PATH, "--version"),
                 timeoutSeconds = 20L,
             )
         if (result.timedOut || result.exitCode != 0) return null
 
         return runCatching {
-            Regex("""\d+\.\d+\.\d+""")
-                .find(result.output)
-                ?.value
+            Regex("""\d+\.\d+\.\d+""").find(result.output)?.value
         }
             .getOrNull()
     }
@@ -101,42 +112,24 @@ data class TypstInstallationManager(
     private fun fetchLatestVersion() = GithubReleasesApi("typst", "typst").fetchLatestVersion()
 
     private fun manageInstallation(action: TypstInstallationAction) {
-        val flag = when (action) {
-            TypstInstallationAction.INSTALL -> "--install"
-            TypstInstallationAction.UPDATE -> "--update"
-            TypstInstallationAction.UNINSTALL -> "--uninstall"
-        }
+        val flag =
+            when (action) {
+                TypstInstallationAction.INSTALL -> "--install"
+                TypstInstallationAction.UPDATE -> "--update"
+                TypstInstallationAction.UNINSTALL -> "--uninstall"
+            }
 
         val activity = MainActivity.instance ?: return
 
         launchTerminal(
             activity = activity,
-            terminalCommand = TerminalCommand(
-                exe = "/bin/bash",
-                args = arrayOf(script.absolutePath, flag),
-                id = "Typst installation",
-                env = arrayOf("DEBIAN_FRONTEND=noninteractive"),
-            ),
-        )
-    }
-
-    fun launchTypstCommand(id: String, workingDir: String?, vararg command: String) {
-        if (!isCliInstalled()) {
-            toast(context.resources.getString(R.string.cli_not_installed))
-            performAction(TypstInstallationAction.INSTALL)
-            return
-        }
-
-        val activity = MainActivity.instance ?: return
-
-        launchTerminal(
-            activity = activity,
-            terminalCommand = TerminalCommand(
-                exe = "/home/.local/bin/typst",
-                args = arrayOf(*command),
-                id = id,
-                workingDir = workingDir,
-            ),
+            terminalCommand =
+                TerminalCommand(
+                    exe = "/bin/bash",
+                    args = arrayOf(script.absolutePath, flag),
+                    id = "Typst installation",
+                    env = arrayOf("DEBIAN_FRONTEND=noninteractive"),
+                ),
         )
     }
 
@@ -152,7 +145,7 @@ data class TypstInstallationManager(
             okText = installLabel,
             cancelText = context.resources.getString(R.string.later),
             onOk = { onConfirm() },
-            onCancel = {}
+            onCancel = {},
         )
     }
 
@@ -168,7 +161,7 @@ data class TypstInstallationManager(
             okText = updateLabel,
             cancelText = context.resources.getString(R.string.later),
             onOk = { onConfirm() },
-            onCancel = {}
+            onCancel = {},
         )
     }
 
@@ -185,7 +178,7 @@ data class TypstInstallationManager(
             okText = uninstallLabel,
             cancelText = cancelLabel,
             onOk = { onConfirm() },
-            onCancel = {}
+            onCancel = {},
         )
     }
 
@@ -201,7 +194,7 @@ data class TypstInstallationManager(
             okText = uninstallLabel,
             cancelText = context.resources.getString(R.string.keep),
             onOk = { onConfirm() },
-            onCancel = {}
+            onCancel = {},
         )
     }
 }

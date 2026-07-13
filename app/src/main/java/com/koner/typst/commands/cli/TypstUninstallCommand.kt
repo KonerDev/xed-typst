@@ -1,4 +1,4 @@
-package com.koner.typst.commands
+package com.koner.typst.commands.cli
 
 import android.content.res.Resources
 import com.koner.typst.R
@@ -11,7 +11,7 @@ import com.rk.icons.Icon
 class TypstUninstallCommand(
     private val icon: Icon,
     private val resources: Resources,
-    private val typstInstallationManager: TypstInstallationManager
+    private val typstInstallationManager: TypstInstallationManager,
 ) : GlobalCommand() {
 
     override val id = "typst.cli.uninstall"

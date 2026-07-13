@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="compile_document">Compile document</string>
-    <string name="watch_document">Watch document</string>
+    <string name="compile_document_pdf">Compile document (PDF)</string>
+    <string name="compile_document_html">Compile document (HTML)</string>
+    <string name="compile_document_png">Compile document (PNG)</string>
+    <string name="compile_document_svg">Compile document (SVG)</string>
+    <string name="preview_document">Preview document</string>
     <string name="cli_not_installed">Typst CLI is not installed</string>
 
     <string name="install_cli">Install CLI</string>

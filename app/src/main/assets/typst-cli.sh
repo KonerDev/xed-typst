@@ -46,6 +46,10 @@ install() {
 
   chmod +x typst
 
+  if ! echo "$PATH" | grep -q "$HOME/.local/bin"; then
+    echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$HOME/.bashrc"
+  fi
+
   info 'Typst installed successfully.'
   exit 0
 }
