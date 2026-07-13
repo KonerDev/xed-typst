@@ -19,6 +19,8 @@ class TypstCompilePngCommand(
 
     override val id = "typst.compile.png"
 
+    override val prefix = "Typst"
+
     override fun getLabel() = context.resources.getString(R.string.compile_document_png)
 
     override fun getIcon(): Icon = icon

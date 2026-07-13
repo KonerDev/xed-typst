@@ -19,6 +19,8 @@ class TypstCompileHtmlCommand(
 
     override val id = "typst.compile.html"
 
+    override val prefix = "Typst"
+
     override fun getLabel() = context.resources.getString(R.string.compile_document_html)
 
     override fun getIcon(): Icon = icon

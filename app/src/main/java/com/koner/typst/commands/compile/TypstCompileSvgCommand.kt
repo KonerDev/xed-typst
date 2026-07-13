@@ -19,6 +19,8 @@ class TypstCompileSvgCommand(
 
     override val id = "typst.compile.svg"
 
+    override val prefix = "Typst"
+
     override fun getLabel() = context.resources.getString(R.string.compile_document_svg)
 
     override fun getIcon(): Icon = icon

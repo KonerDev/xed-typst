@@ -20,8 +20,6 @@ import com.rk.utils.getTempDir
 import io.github.rosemoe.sora.langs.textmate.registry.FileProviderRegistry
 import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry
 import io.github.rosemoe.sora.langs.textmate.registry.provider.AssetsFileResolver
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.io.File
 
@@ -59,6 +57,7 @@ class Main(context: ExtensionContext) : ExtensionAPI(context) {
 
         typstServer =
             TypstServer(
+                    context = context,
                     icon = fileType.icon,
                     supportedExtensions = fileType.extensions,
                     installScript = acquireLspInstallScript(),
@@ -73,9 +72,7 @@ class Main(context: ExtensionContext) : ExtensionAPI(context) {
                 typstInstallationManager = it
             }
 
-        context.scope.launch(Dispatchers.IO) {
-            manager.performStartupActions()
-        }
+        manager.performStartupActions()
 
         typstPreviewRunner =
             TypstPreviewRunner(

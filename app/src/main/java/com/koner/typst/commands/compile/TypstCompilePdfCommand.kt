@@ -19,6 +19,8 @@ class TypstCompilePdfCommand(
 
     override val id = "typst.compile.pdf"
 
+    override val prefix = "Typst"
+
     override fun getLabel() = context.resources.getString(R.string.compile_document_pdf)
 
     override fun getIcon(): Icon = icon

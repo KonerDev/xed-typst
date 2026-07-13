@@ -1,5 +1,7 @@
 package com.koner.typst.utils
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONObject
@@ -8,20 +10,30 @@ class GithubReleasesApi(private val owner: String, private val repo: String) {
 
     private val client = OkHttpClient()
 
-    fun fetchLatestVersion(): String? {
+    /**
+     * Fetches the tag name of the latest release from the GitHub repository.
+     *
+     * This function performs a network request to the GitHub REST API. It is a suspending function that executes on the
+     * [Dispatchers.IO] scheduler.
+     *
+     * @return The tag name of the latest release (e.g., "v1.0.0") if successful, or `null` if the request fails, the
+     *   response is unsuccessful, or a parsing error occurs.
+     */
+    suspend fun fetchLatestVersion(): String? {
         return runCatching {
-            val request = Request.Builder()
-                .url("https://api.github.com/repos/$owner/$repo/releases/latest")
-                .build()
+            withContext(Dispatchers.IO) {
+                val request = Request.Builder().url("https://api.github.com/repos/$owner/$repo/releases/latest").build()
 
-            client.newCall(request).execute().use { response ->
-                if (!response.isSuccessful) return null
+                client.newCall(request).execute().use { response ->
+                    if (!response.isSuccessful) return@withContext null
 
-                val body = response.body.string()
+                    val body = response.body.string()
 
-                val json = JSONObject(body)
-                json.getString("tag_name").removePrefix("v")
+                    val json = JSONObject(body)
+                    json.getString("tag_name")
+                }
             }
-        }.getOrNull()
+        }
+            .getOrNull()
     }
 }

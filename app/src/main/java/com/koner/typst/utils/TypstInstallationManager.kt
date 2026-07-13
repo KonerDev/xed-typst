@@ -11,6 +11,9 @@ import com.rk.file.sandboxHomeDir
 import com.rk.utils.dialog
 import com.rk.utils.toast
 import io.github.z4kn4fein.semver.toVersionOrNull
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 enum class TypstInstallationAction {
@@ -31,11 +34,15 @@ data class TypstInstallationManager(
     var cachedPendingAction: TypstInstallationAction? = null
         private set
 
-    suspend fun performStartupActions() {
-        val pendingAction = checkForAction()
+    fun performStartupActions() {
+        context.scope.launch {
+            val pendingAction = checkForAction()
 
-        if (pendingAction == TypstInstallationAction.UPDATE) {
-            showUpdateDialog { manageInstallation(pendingAction) }
+            if (pendingAction == TypstInstallationAction.UPDATE) {
+                withContext(Dispatchers.Main) {
+                    showUpdateDialog { manageInstallation(pendingAction) }
+                }
+            }
         }
     }
 
@@ -64,7 +71,7 @@ data class TypstInstallationManager(
         }
     }
 
-    suspend fun checkForAction(): TypstInstallationAction? {
+    private suspend fun checkForAction(): TypstInstallationAction? {
         val action =
             when {
                 !isCliInstalled() -> TypstInstallationAction.INSTALL
@@ -92,7 +99,7 @@ data class TypstInstallationManager(
     private suspend fun isUpdateAvailable(): Boolean {
         if (!isCliInstalled()) return false
         val currentVersion = getInstalledVersion()?.toVersionOrNull(false) ?: return false
-        val latestVersion = fetchLatestVersion()?.toVersionOrNull(false) ?: return false
+        val latestVersion = fetchLatestVersion().toVersionOrNull(false) ?: return false
 
         return currentVersion < latestVersion
     }
@@ -111,32 +118,34 @@ data class TypstInstallationManager(
             .getOrNull()
     }
 
-    private fun fetchLatestVersion() = GithubReleasesApi("typst", "typst").fetchLatestVersion()
+    private suspend fun fetchLatestVersion() = GithubReleasesApi("typst", "typst").fetchLatestVersion() ?: "v0.15.0"
 
     private fun manageInstallation(action: TypstInstallationAction) {
-        val flags =
-            when (action) {
-                TypstInstallationAction.INSTALL -> arrayOf("--install", "v${fetchLatestVersion()}")
-                TypstInstallationAction.UPDATE -> arrayOf("--update")
-                TypstInstallationAction.UNINSTALL -> arrayOf("--uninstall")
-            }
+        context.scope.launch {
+            val flags =
+                when (action) {
+                    TypstInstallationAction.INSTALL -> arrayOf("--install", fetchLatestVersion())
+                    TypstInstallationAction.UPDATE -> arrayOf("--update")
+                    TypstInstallationAction.UNINSTALL -> arrayOf("--uninstall")
+                }
 
-        val activity = MainActivity.instance ?: return
+            val activity = MainActivity.instance ?: return@launch
 
-        launchTerminal(
-            activity = activity,
-            terminalCommand =
-                TerminalCommand(
-                    exe = "/bin/bash",
-                    args =
-                        arrayOf(
-                            script.absolutePath,
-                            *flags,
-                        ),
-                    id = "Typst installation",
-                    env = arrayOf("DEBIAN_FRONTEND=noninteractive"),
-                ),
-        )
+            launchTerminal(
+                activity = activity,
+                terminalCommand =
+                    TerminalCommand(
+                        exe = "/bin/bash",
+                        args =
+                            arrayOf(
+                                script.absolutePath,
+                                *flags,
+                            ),
+                        id = "Typst installation",
+                        env = arrayOf("DEBIAN_FRONTEND=noninteractive"),
+                    ),
+            )
+        }
     }
 
     private fun showInstallDialog(onConfirm: () -> Unit) {
