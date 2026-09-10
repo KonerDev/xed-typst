@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 1.2.4 (v106) - 2026-09-10
+
+### Maintenance
+
+- Updated extension to reflect latest Xed-Editor API changes.
+
 ## 1.2.3 (v95) - 2026-07-13
 
 ### Added
@@ -14,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added automatic `PATH` configuration for the Typst CLI installation, allowing the `typst` binary
   to be called directly from the terminal
 
-## Removed
+### Removed
 
 - Removed Typst watch runners and migrated from compile runners to commands
 

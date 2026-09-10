@@ -2,22 +2,25 @@ package com.koner.typst.runner
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.res.Resources
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.net.toUri
 import com.koner.typst.R
 import com.koner.typst.utils.TypstInstallationManager
+import com.rk.activities.settings.SettingsActivity
+import com.rk.activities.settings.SettingsRoutes
 import com.rk.exec.ubuntuProcess
 import com.rk.extension.ExtensionContext
 import com.rk.file.FileObject
 import com.rk.icons.Icon
 import com.rk.resources.fillPlaceholders
-import com.rk.runner.Runner
+import com.rk.runner.FileRunner
 import com.rk.utils.toast
-import java.net.ServerSocket
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.net.ServerSocket
 
 class TypstPreviewRunner(
     private val icon: Icon,
@@ -25,7 +28,7 @@ class TypstPreviewRunner(
     private val supportedExtensions: List<String>,
     private val typstInstallationManager: TypstInstallationManager,
     resources: Resources,
-) : Runner() {
+) : FileRunner() {
 
     companion object {
         private var process: Process? = null
@@ -36,6 +39,12 @@ class TypstPreviewRunner(
     override val id = "typst.preview"
 
     override val label = resources.getString(R.string.preview_document)
+
+    override val onConfigure: () -> Unit = {
+        val intent = Intent(context.appContext, SettingsActivity::class.java)
+        intent.putExtra("route", "${SettingsRoutes.ExtensionSettings.route}/${context.extension.id}")
+        context.appContext.startActivity(intent)
+    }
 
     override fun getIcon(context: Context) = icon
 

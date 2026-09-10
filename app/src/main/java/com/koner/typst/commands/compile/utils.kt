@@ -11,9 +11,9 @@ import com.rk.file.FileOperations
 import com.rk.file.toFileWrapper
 import com.rk.resources.fillPlaceholders
 import com.rk.utils.toast
-import java.io.File
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.io.File
 
 internal suspend fun compile(context: ExtensionContext, fileObject: FileObject, targetType: String = "pdf") {
     val featureArgs = if (targetType == "html") arrayOf("--features", "html") else emptyArray()
@@ -54,7 +54,7 @@ internal suspend fun compile(context: ExtensionContext, fileObject: FileObject, 
             }
 
             MainActivity.instance?.viewModel?.editorManager?.apply {
-                openFile(compiledFile, null, true)
+                openFile(fileObject = compiledFile, projectRoot = null, switchToTab = true)
             }
         }
     }

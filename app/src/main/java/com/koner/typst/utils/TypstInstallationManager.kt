@@ -1,6 +1,7 @@
 package com.koner.typst.utils
 
 import com.koner.typst.R
+import com.rk.DefaultScope
 import com.rk.activities.main.MainActivity
 import com.rk.exec.ShellUtils
 import com.rk.exec.TerminalCommand
@@ -121,7 +122,7 @@ data class TypstInstallationManager(
     private suspend fun fetchLatestVersion() = GithubReleasesApi("typst", "typst").fetchLatestVersion() ?: "v0.15.0"
 
     private fun manageInstallation(action: TypstInstallationAction) {
-        context.scope.launch {
+        DefaultScope.launch {
             val flags =
                 when (action) {
                     TypstInstallationAction.INSTALL -> arrayOf("--install", fetchLatestVersion())

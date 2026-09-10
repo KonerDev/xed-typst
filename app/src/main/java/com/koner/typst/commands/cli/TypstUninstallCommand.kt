@@ -28,7 +28,7 @@ class TypstUninstallCommand(
 
     override fun getIcon() = icon
 
-    override fun action(actionContext: ActionContext) {
+    override fun execute(context: ActionContext) {
         if (typstInstallationManager.isCliInstalled()) {
             typstInstallationManager.performAction(TypstInstallationAction.UNINSTALL)
         } else {

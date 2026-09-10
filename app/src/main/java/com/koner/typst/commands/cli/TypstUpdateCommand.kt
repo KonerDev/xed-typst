@@ -26,7 +26,7 @@ class TypstUpdateCommand(
         return typstInstallationManager.cachedPendingAction == TypstInstallationAction.UPDATE
     }
 
-    override fun action(actionContext: ActionContext) {
+    override fun execute(context: ActionContext) {
         typstInstallationManager.performAction(TypstInstallationAction.UPDATE)
     }
 }

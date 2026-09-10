@@ -89,7 +89,7 @@ class Main(context: ExtensionContext) : ExtensionAPI(context) {
         typstCompilePdfCommand =
             TypstCompilePdfCommand(
                     icon = fileType.icon,
-                    context = context,
+                    extensionContext = context,
                     supportedExtensions = fileType.extensions,
                     typstInstallationManager = manager,
                 )
@@ -100,7 +100,7 @@ class Main(context: ExtensionContext) : ExtensionAPI(context) {
         typstCompileHtmlCommand =
             TypstCompileHtmlCommand(
                     icon = fileType.icon,
-                    context = context,
+                    extensionContext = context,
                     supportedExtensions = fileType.extensions,
                     typstInstallationManager = manager,
                 )
@@ -111,7 +111,7 @@ class Main(context: ExtensionContext) : ExtensionAPI(context) {
         typstCompilePngCommand =
             TypstCompilePngCommand(
                     icon = fileType.icon,
-                    context = context,
+                    extensionContext = context,
                     supportedExtensions = fileType.extensions,
                     typstInstallationManager = manager,
                 )
@@ -122,7 +122,7 @@ class Main(context: ExtensionContext) : ExtensionAPI(context) {
         typstCompileSvgCommand =
             TypstCompileSvgCommand(
                     icon = fileType.icon,
-                    context = context,
+                    extensionContext = context,
                     supportedExtensions = fileType.extensions,
                     typstInstallationManager = manager,
                 )
