@@ -40,10 +40,12 @@ class TypstPreviewRunner(
 
     override val label = resources.getString(R.string.preview_document)
 
-    override val onConfigure: () -> Unit = {
-        val intent = Intent(context.appContext, SettingsActivity::class.java)
-        intent.putExtra("route", "${SettingsRoutes.ExtensionSettings.route}/${context.extension.id}")
-        context.appContext.startActivity(intent)
+    override val hasSettings = true
+
+    override fun launchSettings(context: Context) {
+        val intent = Intent(context, SettingsActivity::class.java)
+        intent.putExtra("route", "${SettingsRoutes.ExtensionSettings.route}/${this.context.extension.id}")
+        context.startActivity(intent)
     }
 
     override fun getIcon(context: Context) = icon
